@@ -32,7 +32,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://e-commmerch2-0.vercel.app",
     credentials: true,
   })
 );
