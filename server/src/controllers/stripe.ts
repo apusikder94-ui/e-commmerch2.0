@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
 
-const YOUR_DOMAIN = "http://localhost:3000";
+const YOUR_DOMAIN = "https://e-commmerch2-0.vercel.app";
 
 
 export const stripePayment = async (
