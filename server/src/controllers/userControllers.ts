@@ -76,8 +76,8 @@ export const signIn = async (req: Request, res: Response) => {
     );
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
