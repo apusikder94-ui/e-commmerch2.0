@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/baseUri/base_Uri";
 import {
   IGetAllUserResposne,
   ISignInResponse,
@@ -16,7 +17,7 @@ export const authApi = createApi({
   reducerPath: "authApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/auth",
+    baseUrl: `${BASE_URL}/api/auth`,
     credentials: "include",
   }),
 

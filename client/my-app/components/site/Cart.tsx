@@ -10,6 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { ICart } from "@/type/type";
+import { BASE_URL } from "@/baseUri/base_Uri";
 
 interface Props {
   open: boolean;
@@ -27,7 +28,7 @@ const Cart = ({ open, setOpen }: Props) => {
   );
 
   const handleCheckout = async (cart: ICart[]) => {
-    const { data } = await axios.post("http://localhost:8080/api/v1/stripe/checkout", { cart }, {
+    const { data } = await axios.post(`${BASE_URL}/api/v1/stripe/checkout`, { cart }, {
       withCredentials: true,
     });
     window.location.href = data.url;

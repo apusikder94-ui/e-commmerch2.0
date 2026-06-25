@@ -1,0 +1,1 @@
+export const BASE_URL = "https://e-commmerch2-0.onrender.com"

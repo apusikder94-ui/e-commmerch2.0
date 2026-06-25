@@ -115,7 +115,8 @@ const Page = () => {
 
                   <button
                     onClick={() => handleDelete(user._id)}
-                    className="text-red-600 hover:text-red-800">
+                    className="text-red-600 hover:text-red-800"
+                  >
                     <Trash size={18} />
                   </button>
 

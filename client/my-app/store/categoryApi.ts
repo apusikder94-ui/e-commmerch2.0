@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/baseUri/base_Uri";
 import { ICreateCategoryResponse, IDeleteCategoryResponse, IGetCategoryResponse, IUpdateCategoryResponse } from "@/type/type";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import { createApi } from "@reduxjs/toolkit/query/react";
@@ -5,7 +6,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 export const categoryApi = createApi({
   reducerPath: "categoryApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/v1/category",
+    baseUrl: `${BASE_URL}/api/v1/category`,
     credentials: "include",
   }),
   tagTypes: ["Category"],
@@ -38,7 +39,7 @@ export const categoryApi = createApi({
     }),
     deleteCategory: builder.mutation<
       IDeleteCategoryResponse,
-     { id: string}
+      { id: string }
     >({
       query: ({ id }) => ({
         url: `/delete/${id}`,
