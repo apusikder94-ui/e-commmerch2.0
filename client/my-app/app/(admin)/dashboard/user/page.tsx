@@ -1,4 +1,5 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,50 +11,26 @@ import {
 } from "@/components/ui/table";
 
 import { Edit, Trash } from "lucide-react";
+import { useAllUserQuery, useDeleteUserMutation } from "@/store/authApi";
+import { IUser } from "@/type/type";
+import AddUser from "@/components/admin/AddUser";
 
 const Page = () => {
-  const users = [
-    {
-      id: 1,
-      name: "Apu Sikder",
-      email: "apu@email.com",
-      role: "Admin",
-      profilePic:
-        "https://ui-avatars.com/api/?name=Apu+Sikder&background=0D8ABC&color=fff",
-    },
-    {
-      id: 2,
-      name: "John Doe",
-      email: "john@example.com",
-      role: "User",
-      profilePic:
-        "https://ui-avatars.com/api/?name=John+Doe&background=FF5733&color=fff",
-    },
-    {
-      id: 3,
-      name: "Sarah Khan",
-      email: "sarah@example.com",
-      role: "User",
-      profilePic:
-        "https://ui-avatars.com/api/?name=Sarah+Khan&background=28A745&color=fff",
-    },
-    {
-      id: 4,
-      name: "Rahim Uddin",
-      email: "rahim@example.com",
-      role: "Moderator",
-      profilePic:
-        "https://ui-avatars.com/api/?name=Rahim+Uddin&background=FFC107&color=000",
-    },
-    {
-      id: 5,
-      name: "Nadia Akter",
-      email: "nadia@example.com",
-      role: "User",
-      profilePic:
-        "https://ui-avatars.com/api/?name=Nadia+Akter&background=6F42C1&color=fff",
-    },
-  ];
+  const [open, setOpen] = useState<boolean>(false);
+  const [selected, setSelected] = useState<null | IUser>(null);
+  const [deleteUser] = useDeleteUserMutation()
+
+  const { data } = useAllUserQuery();
+  const users = data?.user || [];
+
+  const handleUpdate = (user: IUser) => {
+    setOpen(true);
+    setSelected(user);
+  }
+
+  const handleDelete = async (id: string) => {
+    await deleteUser(id).unwrap()
+  }
 
   return (
     <div className="p-8 space-y-6">
@@ -64,7 +41,8 @@ const Page = () => {
           User Page
         </h3>
 
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+        <button
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
           + Add User
         </button>
       </div>
@@ -89,12 +67,12 @@ const Page = () => {
 
           <TableBody>
 
-            {users.map((user) => (
-              <TableRow key={user.id}>
+            {users.map((user: IUser, index) => (
+              <TableRow key={user._id}>
 
                 {/* ID */}
                 <TableCell className="font-medium">
-                  {user.id}
+                  {index + 1}
                 </TableCell>
 
                 {/* PROFILE PIC */}
@@ -115,13 +93,12 @@ const Page = () => {
                 {/* ROLE */}
                 <TableCell>
                   <span
-                    className={`px-3 py-1 rounded-full text-sm ${
-                      user.role === "Admin"
-                        ? "bg-red-100 text-red-600"
-                        : user.role === "Moderator"
+                    className={`px-3 py-1 rounded-full text-sm ${user.role === "Admin"
+                      ? "bg-red-100 text-red-600"
+                      : user.role === "Moderator"
                         ? "bg-yellow-100 text-yellow-700"
                         : "bg-gray-100 text-gray-600"
-                    }`}
+                      }`}
                   >
                     {user.role}
                   </span>
@@ -130,11 +107,15 @@ const Page = () => {
                 {/* ACTION */}
                 <TableCell className="text-right space-x-3">
 
-                  <button className="text-blue-600 hover:text-blue-800">
+                  <button
+                    onClick={() => handleUpdate(user)}
+                    className="text-blue-600 hover:text-blue-800">
                     <Edit size={18} />
                   </button>
 
-                  <button className="text-red-600 hover:text-red-800">
+                  <button
+                    onClick={() => handleDelete(user._id)}
+                    className="text-red-600 hover:text-red-800">
                     <Trash size={18} />
                   </button>
 
@@ -148,6 +129,7 @@ const Page = () => {
         </Table>
 
       </div>
+      <AddUser open={open} setOpen={setOpen} selected={selected} />
     </div>
   );
 };

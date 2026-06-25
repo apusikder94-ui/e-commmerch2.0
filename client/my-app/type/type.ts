@@ -1,8 +1,13 @@
 export interface IUser {
+  _id?:string;
   name?: string;
   email: string;
   profilePic?: string;
   role?: string;
+  orders:string[];
+  createdAt:string;
+  updatedAt:string;
+  __v:number
 }
 
 export interface ISignUpResponse {
@@ -25,6 +30,12 @@ export interface ISignUpRequest {
 export interface ISignInRequest {
   email: string;
   password: string;
+}
+
+export interface IGetAllUserResposne {
+  success: boolean;
+  message: string;
+  user: IUser[]
 }
 
 export interface ICategory {
@@ -82,4 +93,16 @@ export interface IGetProductResponse {
   success: boolean;
   message: string;
   product: IProduct[];
+}
+
+
+
+export interface ICart {
+  _id: string;
+  name: string;
+  slug: string;
+  images: string;
+  price: string;
+  discountPrice: string;
+  quantity: number;
 }

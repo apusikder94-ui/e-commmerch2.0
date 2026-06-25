@@ -24,6 +24,12 @@ const LeftSidebar = () => {
     },
     {
       id: 4,
+      name: "Orders",
+      link: "/dashboard/orders",
+      icon: List,
+    },
+    {
+      id: 5,
       name: "User",
       link: "/dashboard/user",
       icon: Users,

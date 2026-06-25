@@ -82,9 +82,9 @@ export const getAllProduct = async (req: Request, res: Response) => {
 };
 
 export const getSingleProduct = async (req: Request, res: Response) => {
-  const productId = req.params.id;
+  const productSlug = req.params.slug;
   try {
-    const product = await Product.findById(productId);
+    const product = await Product.findOne({ slug: productSlug });
     if (!product) {
       return res.status(401).json({
         success: false,
@@ -166,6 +166,109 @@ export const deleteProduct = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
     return res.status(501).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getCategoryByProduct = async (
+  req: Request,
+  res: Response
+) => {
+  const categorySlug = req.params.slug;
+
+  try {
+    // Find Category By Slug
+    const category = await Category.findOne({
+      slug: categorySlug,
+    });
+
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: "Category not found",
+      });
+    }
+
+    // Find Products By Category Id
+    const product = await Product.find({
+      categoryId: category._id,
+    });
+
+    if (product.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No products found in this category",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Products fetched successfully",
+      product,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const searchProduct = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const q = req.query.q as string;
+
+    if (!q || q.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "Search query is required",
+      });
+    }
+
+    const product = await Product.find({
+      $or: [
+        {
+          name: {
+            $regex: q,
+            $options: "i",
+          },
+        },
+        {
+          description: {
+            $regex: q,
+            $options: "i",
+          },
+        },
+      ],
+    });
+
+
+    if (product.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No product found",
+      });
+    }
+
+
+    return res.status(200).json({
+      success: true,
+      message: "Search product received successfully",
+      product,
+    });
+
+
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
       success: false,
       message: "Internal server error",
     });

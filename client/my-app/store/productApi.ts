@@ -1,7 +1,7 @@
 import { ICreateProductResponse, IGetProductResponse } from "@/type/type";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const BASE_URL = "http://localhost:8080/api/v1";
+const BASE_URL = "http://localhost:8080/api/v1/product";
 
 export const productApi = createApi({
   reducerPath: "productApi",
@@ -14,7 +14,7 @@ export const productApi = createApi({
     // ================= CREATE PRODUCT =================
     createProduct: builder.mutation<ICreateProductResponse, FormData>({
       query: (formData: FormData) => ({
-        url: "/product/create",
+        url: "/create",
         method: "POST",
         body: formData,
       }),
@@ -23,20 +23,32 @@ export const productApi = createApi({
 
     // ================= GET ALL PRODUCTS =================
     getAllProducts: builder.query<IGetProductResponse, void>({
-      query: () => "/product/all",
+      query: () => "/all",
+      providesTags: ["Product"],
+    }),
+    // ================= GET ALL PRODUCTS BY CATEGORY =================
+    getAllProductsBYCategory: builder.query<IGetProductResponse, { slug: string }>({
+      query: ({ slug }) => `/category/${slug}`,
       providesTags: ["Product"],
     }),
 
     // ================= GET SINGLE PRODUCT =================
-    getSingleProduct: builder.query({
-      query: (id: string) => `/product/single/${id}`,
+    getSingleProduct: builder.query<any, { slug: string }>({
+      query: ({ slug }) => `/single/${slug}`,
       providesTags: ["Product"],
+    }),
+    // ================= GET SEARCH PRODUCT =================
+    searchProduct: builder.query<any, { query: string }>({
+      query: ({ query }) => ({
+        url: `/search?q=${query}`,
+        method: "GET",
+      }),
     }),
 
     // ================= UPDATE PRODUCT =================
     updateProduct: builder.mutation({
       query: ({ id, formData }: { id: string; formData: FormData }) => ({
-        url: `/product/update/${id}`,
+        url: `/update/${id}`,
         method: "PUT",
         body: formData,
       }),
@@ -46,7 +58,7 @@ export const productApi = createApi({
     // ================= DELETE PRODUCT =================
     deleteProduct: builder.mutation({
       query: (id: string) => ({
-        url: `/product/delete/${id}`,
+        url: `/delete/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Product"],
@@ -61,4 +73,6 @@ export const {
   useGetSingleProductQuery,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useGetAllProductsBYCategoryQuery,
+  useSearchProductQuery
 } = productApi;

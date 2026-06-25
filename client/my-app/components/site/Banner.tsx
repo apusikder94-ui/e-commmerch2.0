@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -8,8 +8,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const Banner = () => {
+  // Autoplay configuration instance
+  const plugin = useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: false })
+  );
+
   const banner = [
     {
       id: 1,
@@ -32,22 +38,35 @@ const Banner = () => {
       img: "https://img.lazcdn.com/us/domino/f1941017-a8db-403c-a2ee-ab4c18fdeaf4_BD-1976-688.jpg_2200x2200q80.jpg_.avif",
     },
   ];
+
   return (
-    <div className="max-w-7xl mx-auto px-6 md:px-8 pt-6">
-      <Carousel className="w-full">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-4 md:pt-6">
+      <Carousel 
+        plugins={[plugin.current]}
+        className="w-full relative group rounded-xl md:rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
+        onMouseEnter={plugin.current.stop}
+        onMouseLeave={plugin.current.reset}
+      >
         <CarouselContent>
-          {banner.map((item) => (
+          {banner.map((item, index) => (
             <CarouselItem key={item.id}>
-              <img
-                src={item.img}
-                alt={`banner-${item.id}`}
-                className="w-full h-125 object-cover rounded-sm"
-              />
+              <div className="relative w-full h-60 sm:h-70 md:h-80 lg:h-115 xl:h-120">
+                <img
+                  src={item.img}
+                  alt={`ShopBase Promotional Banner ${item.id}`}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  className="w-full h-full object-cover object-center select-none pointer-events-none"
+                />
+                {/* Visual dark overlay for better text contrast if you choose to overlay text later */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+
+        {/* Carousel controls - Hidden on mobile for swipe gestures, smoothly transitions visible on desktop hover */}
+        <CarouselPrevious className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-slate-800 border-none opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg scale-90 hover:scale-100" />
+        <CarouselNext className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-slate-800 border-none opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg scale-90 hover:scale-100" />
       </Carousel>
     </div>
   );

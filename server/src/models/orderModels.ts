@@ -5,20 +5,28 @@ const orderSchema = new Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      // required: true,
     },
 
-    product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: true,
-    },
+    products: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
 
-    quantity: {
-      type: Number,
-      default: 1,
-      min: 1,
-    },
+        quantity: {
+          type: Number,
+          default: 1,
+          min: 1,
+        },
+        price: {
+          type: Number,
+          default: 0,
+        }
+      }
+    ],
 
     totalPrice: {
       type: Number,
@@ -30,12 +38,6 @@ const orderSchema = new Schema(
         type: String,
         required: true,
       },
-
-      phone: {
-        type: String,
-        required: true,
-      },
-
       address: {
         type: String,
         required: true,
@@ -65,7 +67,7 @@ const orderSchema = new Schema(
 
     orderStatus: {
       type: String,
-      enum: [  
+      enum: [
         "Pending",
         "Processing",
         "Shipped",
